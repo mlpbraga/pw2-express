@@ -1,0 +1,26 @@
+{
+  "development": {
+    "username": "myapp",
+    "password": "senha123",
+    "database": "myapp",
+    "host": "localhost",
+    "dialect": "mysql",
+    "operatorsAliases": false
+  },
+  "test": {
+    "username": "myapp",
+    "password": "senha123",
+    "database": "myapp",
+    "host": "localhost",
+    "dialect": "mysql",
+    "operatorsAliases": false
+  },
+  "production": {
+    "username": "myapp",
+    "password": "senha123",
+    "database": "myapp",
+    "host": "localhost",
+    "dialect": "mysql",
+    "operatorsAliases": false
+  }
+}
