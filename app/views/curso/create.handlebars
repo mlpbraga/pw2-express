@@ -1,0 +1,27 @@
+<div class='create-curso-form'>
+  <h1>Adicionar novo curso</h1>
+  <form action="/curso/create" method="post" style="display:inline-block;margin-top:20px;">
+      <div>
+        <div class="form-group" style="display:inline-flex;">
+          <div class="form-field-curso">
+            <label for="sigla">Sigla</label>
+            <input style="width:100px" type="text" class="form-control" id="sigla" aria-describedby="sigla-help" placeholder="Ex: CC">
+          </div>
+          {{!-- <small id="sigla" class="form-text text-muted">Exemplo: CC</small> --}}
+          <div class="form-field-curso">
+            <label for="nome">Nome</label>
+            <input style="width:300px" type="text" class="form-control" id="nome" aria-describedby="nome-help" placeholder="Ex: Ciencia da Computação">
+          </div>
+          {{!-- <small id="nome" class="form-text text-muted">Exemplo: Ciência da Computação</small> --}}
+        </div>
+        <div class="form-group">
+          <label for="descricao">Descrição</label>
+          <textarea class="form-control" id="descricao" rows="3"></textarea>
+        </div>
+      </div>
+      <div>
+        <input type="submit" class="btn btn-primary" value="Enviar">
+      </div>
+
+  </form>
+</div>

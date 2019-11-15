@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.bulkInsert('Mensagems', [
+  up: (queryInterface, Sequelize) => queryInterface.bulkInsert('mensagems', [
     {
       id_partida: 1,
       id_user: 1,
@@ -18,5 +18,5 @@ module.exports = {
     },
   ], {}),
 
-  down: (queryInterface, Sequelize) => queryInterface.bulkDelete('Mensagems', {}, {}),
+  down: (queryInterface, Sequelize) => queryInterface.bulkDelete('mensagems', {}, {}),
 };

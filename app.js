@@ -10,6 +10,8 @@ const router = require('./config/routes');
 const app = express();
 const port = 4567;
 
+app.use(express.urlencoded({ extended: false }));
+
 app.use(logger('short'));
 
 // middlewares

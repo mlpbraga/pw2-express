@@ -13,9 +13,11 @@ logs-db:
 run-db:
 	docker-compose exec db sh
 
-
 populate-db:
 	npx sequelize-cli db:seed:all
 
 remove-data:
 	npx sequelize-cli db:seed:undo:all
+
+create-tables:
+	npx sequelize db:migrate
