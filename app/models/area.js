@@ -1,7 +1,7 @@
-'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Area = sequelize.define('area', {
-    nome: DataTypes.STRING
+    nome: DataTypes.STRING,
+    descricao: DataTypes.STRING,
   }, {
     underscored: true,
   });

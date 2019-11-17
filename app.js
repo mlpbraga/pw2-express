@@ -38,7 +38,10 @@ app.use('/js', [
   express.static(`${__dirname}/public/js`),
 ]);
 
-app.engine('handlebars', handlebars());
+app.engine('handlebars', handlebars({
+  helpers: require('./config/handlebars-helpers'),
+}));
+
 app.set('view engine', 'handlebars');
 app.set('views', `${__dirname}/app/views`);
 

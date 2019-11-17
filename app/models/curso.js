@@ -1,4 +1,3 @@
-'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Curso = sequelize.define('curso', {
     sigla: {
@@ -23,8 +22,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     underscored: true,
   });
-  Curso.associate = (models) => {
-    // associations can be defined here
-  };
+  // Curso.associate = (models) => {
+  //   // associations can be defined here
+  // };
   return Curso;
 };

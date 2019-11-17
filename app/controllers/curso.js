@@ -2,6 +2,7 @@
 const models = require('../models/index');
 
 const Curso = models.curso;
+const Area = models.area;
 
 const index = async (req, res) => {
   const conteudo = 'Página principal da aplicação';
@@ -16,13 +17,21 @@ const read = async (req, res) => {
   res.end(cursoId);
 };
 const create = async (req, res) => {
+  const areas = await Area.findAll();
   if (req.route.methods.get) {
-    res.render('curso/create');
+    res.render('curso/create', {
+      areas,
+    });
   } else {
     try {
       await Curso.create(req.body);
-    } catch (e) {
-      console.log(e);
+      res.redirect('/curso');
+    } catch (error) {
+      res.render('curso/create', {
+        curso: req.body,
+        errors: error.errors,
+        areas,
+      });
     }
   }
 };

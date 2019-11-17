@@ -11,6 +11,7 @@ module.exports = {
       nome: {
         type: Sequelize.STRING
       },
+      descricao: Sequelize.STRING,
       created_at: {
         allowNull: false,
         type: Sequelize.DATE
@@ -18,7 +19,7 @@ module.exports = {
       updated_at: {
         allowNull: false,
         type: Sequelize.DATE
-      }
+      },
     });
   },
   down: (queryInterface, Sequelize) => {
