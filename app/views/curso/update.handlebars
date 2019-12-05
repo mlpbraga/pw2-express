@@ -1,0 +1,49 @@
+<div class='create-curso-form'>
+  <h1>Adicionar novo curso</h1>
+  <form action="/curso/create" method="post" style="display:inline-block;margin-top:20px;">
+      <div>
+        <div class="form-group" style="display:inline-flex;">
+          <div class="form-field-curso">
+            <label for="sigla">Sigla</label>
+            <input style="width:100px;" name="sigla" id="sigla" type="text" placeholder="Ex: IE00" class="form-control {{#if errors}}is-invalid{{/if}}" value="{{curso.sigla}}">
+            <div class="invalid-feedback">{{showError errors 'sigla'}}</div>
+          </div>
+   
+          <div class="form-field-curso">
+            <label for="nome">Nome do Curso</label>
+            <input style="width:300px;" name="nome" id="nome" type="text" placeholder="Ex: Ciência da Computação" class="form-control {{#if errors}}is-invalid{{/if}}" value="{{curso.nome}}">
+            <div class="invalid-feedback">{{showError errors 'nome'}}</div>
+          </div>
+        </div>
+        <div class="form-field-curso">
+          <div>
+            <label for="area_id">Área do Conhecimento</label>
+          </div>
+          <div style="display: inline-flex;">
+            {{#each areas}}
+              <input style="margin: 0px 5px 0px 15px;" class="align-middle"  {{#equals id  ../curso.area_id}}checked="checked"{{/equals}} type="radio" name="area_id" id="area_id" value="{{id}}"> {{nome}}<br>
+            {{/each}}
+          </div>
+          <div class="invalid-feedback">{{showError errors 'area_id'}}</div>
+        </div>
+
+        <div class="form-group">
+          <label for="descricao">Descrição do Curso</label>
+          <textarea class="form-control" name="descricao" id="descricao" rows="3">{{curso.descricao}}</textarea>
+        </div>
+      </div>
+      <div>
+        <input type="submit" class="btn btn-primary" value="Enviar">
+      </div>
+      {{!-- <input type="hidden" name="_csrf" value="{{csrf}}"> --}}
+  </form>
+  <div style="margin-top:20px;">
+    <h1>Áreas de Conhecimento</h1>
+    <ul class='list-group'>
+      {{#each areas}}
+      <li class="list-group-item align-items-center"><b>{{nome}}</b> : {{descricao}}</li>
+      {{/each}}
+    </ul>
+  </div>
+
+</div>

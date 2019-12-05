@@ -17,14 +17,14 @@
         </div>
         <div class="form-field-curso">
           <div>
-            <label for="id_area">Área do Conhecimento</label>
+            <label for="area_id">Área do Conhecimento</label>
           </div>
           <div style="display: inline-flex;">
             {{#each areas}}
-              <input style="margin: 0px 5px 0px 15px;" class="align-middle" type="radio" name="id_area" id="id_area" value="{{id}}"> {{nome}}<br>
+              <input style="margin: 0px 5px 0px 15px;" class="align-middle" type="radio" name="area_id" id="area_id" value="{{id}}"> {{nome}}<br>
             {{/each}}
           </div>
-          <div class="invalid-feedback">{{showError errors 'id_area'}}</div>
+          <div class="invalid-feedback">{{showError errors 'area_id'}}</div>
         </div>
 
         <div class="form-group">

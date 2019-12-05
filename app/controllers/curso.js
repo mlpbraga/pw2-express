@@ -39,7 +39,29 @@ const create = async (req, res) => {
     }
   }
 };
-const update = async (req, res) => { };
+const update = async (req, res) => {
+  const { id } = req.params;
+  const areas = await Area.findAll();
+  const curso = await Curso.findOne({ id });
+  if (req.route.methods.get) {
+    res.render('curso/update', {
+      // csrf,
+      areas,
+      curso,
+    });
+  } else {
+    try {
+      await Curso.create(req.body);
+      res.redirect('/curso');
+    } catch (error) {
+      res.render('curso/update', {
+        curso: req.body,
+        errors: error.errors,
+        areas,
+      });
+    }
+  }
+};
 const remove = async (req, res) => { };
 
 
