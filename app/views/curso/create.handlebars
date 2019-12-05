@@ -21,7 +21,7 @@
           </div>
           <div style="display: inline-flex;">
             {{#each areas}}
-              <input style="margin: 0px 5px 0px 15px;" class="align-middle" type="radio" name="area_id" id="area_id" value="{{id}}"> {{nome}}<br>
+              <input style="margin: 0px 5px 0px 15px;" class="align-middle" type="radio" name="id_area" id="id_area" value="{{id}}"> {{nome}}<br>
             {{/each}}
           </div>
           <div class="invalid-feedback">{{showError errors 'id_area'}}</div>
@@ -29,12 +29,13 @@
 
         <div class="form-group">
           <label for="descricao">Descrição do Curso</label>
-          <textarea class="form-control" id="descricao" rows="3"></textarea>
+          <textarea class="form-control" name="descricao" id="descricao" rows="3"></textarea>
         </div>
       </div>
       <div>
         <input type="submit" class="btn btn-primary" value="Enviar">
       </div>
+      {{!-- <input type="hidden" name="_csrf" value="{{csrf}}"> --}}
   </form>
   <div style="margin-top:20px;">
     <h1>Áreas de Conhecimento</h1>

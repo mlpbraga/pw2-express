@@ -6,28 +6,31 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       sigla: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       nome: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       descricao: {
-        type: Sequelize.TEXT
+        type: Sequelize.TEXT,
       },
-      id_area: {
-        type: Sequelize.INTEGER
+      area_id: {
+        type: Sequelize.INTEGER,
+        references: { model: 'areas', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
       },
       created_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   down: (queryInterface, Sequelize) => {

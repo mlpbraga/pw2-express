@@ -3,6 +3,8 @@ const handlebars = require('express-handlebars');
 const logger = require('morgan');
 const sass = require('node-sass-middleware');
 const path = require('path');
+const cookieParser = require('cookie-parser');
+const csrf = require('csurf');
 
 const router = require('./config/routes');
 // const { about } = require('./utils/constants');
@@ -47,7 +49,17 @@ app.set('views', `${__dirname}/app/views`);
 
 app.use(router);
 
+app.use(cookieParser());
+app.use(csrf({ cookie: true }));
 
+app.get('/cookie', function (req, res) {
+  if (!('nome' in req.cookies)) {
+  res.cookie('nome', 'valor');
+  res.send('Você NUNCA passou por aqui!');
+  } else {
+  res.send('Você JÁ passou por aqui');
+  }
+ });
 // app.use(function (req, res, next) {
 //   if (user.checkAuth(req)) {
 //     next();

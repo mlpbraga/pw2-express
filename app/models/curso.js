@@ -16,14 +16,19 @@ module.exports = (sequelize, DataTypes) => {
     descricao: {
       type: DataTypes.TEXT,
     },
-    id_area: {
+    area_id: {
       type: DataTypes.INTEGER,
     },
   }, {
     underscored: true,
   });
-  // Curso.associate = (models) => {
-  //   // associations can be defined here
-  // };
+  Curso.associate = (models) => {
+    const {
+      area,
+      user,
+    } = models;
+    Curso.belongsTo(area);
+    Curso.hasMany(user);
+  };
   return Curso;
 };

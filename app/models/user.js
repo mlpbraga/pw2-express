@@ -4,11 +4,19 @@ module.exports = (sequelize, DataTypes) => {
     nome: DataTypes.STRING,
     email: DataTypes.STRING,
     senha: DataTypes.STRING,
-    id_curso: DataTypes.INTEGER,
+    curso_id: DataTypes.INTEGER,
   }, {
     underscored: true,
   });
-  User.associate = function(models) {
+  User.associate = (models) => {
+    const {
+      curso,
+      mensagem,
+      partida,
+    } = models;
+    User.belongsTo(curso);
+    User.hasMany(mensagem);
+    User.hasMany(partida);
     // associations can be defined here
   };
   return User;

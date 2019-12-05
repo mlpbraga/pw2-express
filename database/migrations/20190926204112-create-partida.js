@@ -8,14 +8,24 @@ module.exports = {
       primaryKey: true,
       type: Sequelize.INTEGER,
     },
-    id_user_1: {
+    user_id_1: {
       type: Sequelize.INTEGER,
+      references: { model: 'users', key: 'id' },
+      onUpdate: 'CASCADE',
+      onDelete: 'NO ACTION',
     },
-    id_user_2: {
+    user_id_2: {
       type: Sequelize.INTEGER,
+      references: { model: 'users', key: 'id' },
+      onUpdate: 'CASCADE',
+      onDelete: 'NO ACTION',
+      allowNull: false,
     },
     winner: {
       type: Sequelize.INTEGER,
+      references: { model: 'users', key: 'id' },
+      onUpdate: 'CASCADE',
+      onDelete: 'NO ACTION',
     },
     fen: {
       type: Sequelize.STRING,

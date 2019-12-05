@@ -5,7 +5,11 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     underscored: true,
   });
-  Area.associate = function(models) {
+  Area.associate = (models) => {
+    const { curso } = models;
+    Area.hasMany(curso);
+
+
     // associations can be defined here
   };
   return Area;
