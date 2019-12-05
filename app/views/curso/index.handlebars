@@ -1,6 +1,30 @@
 <div class="container">
   <h1>Cursos</h1>
   {{#each cursos}}
-    <li>{{nome}}</li>
+    <div class="cursos-list-item">
+      <div class="curso-labels-container">
+        <strong>[{{sigla}}]</strong><strong>{{nome}}</strong> - <small>{{descricao}}</small>
+      </div>
+      <div class="curso-options-container">
+        <div class="curso-option-button">
+          <a class="btn btn-primary" style="padding: 0 5px;" href="/curso/read/{{id}}">
+            <img class="button-icon" src="/img/book.svg"/>
+            <span class="tooltiptext">Visualizar curso</span>
+          </a>
+        </div>
+        <div class="curso-option-button">
+          <a class="btn btn-primary" style="padding: 0 5px;" href="/curso/update/{{id}}">
+            <img class="button-icon" src="/img/edit.svg"/>
+            <span class="tooltiptext">Editar curso</span>
+          </a>
+        </div>
+        <div class="curso-option-button">
+          <a class="btn btn-primary" style="padding: 0 5px;" href="/curso/remove/{{id}}">
+            <img class="button-icon" src="/img/delete.svg"/>
+            <span class="tooltiptext">Excluir curso</span>
+          </a>
+        </div>
+      </div>
+    </div>
   {{/each}}
 </div>

@@ -1,0 +1,32 @@
+<div class='create-curso-form'>
+  <h1>Informações do Curso</h1>
+  <div class="curso-info-container">
+    <div>
+      <strong>Sigla: </strong><span>{{curso.sigla}}</span>
+    </div>
+    <div>
+      <strong>Nome: </strong><span>{{curso.nome}}</span>
+    </div>
+    <div>
+      <strong>Descrição: </strong><span>{{curso.descricao}}</span>
+    </div>
+    <div>
+      <strong>Área do Conhecimento: </strong><span>{{curso.area.nome}}</span>
+    </div>
+  
+  </div>
+  <div class="curso-option-button" style="margin: 15px 0;">
+    <a class="btn btn-primary" style="padding: 0 5px;" href="/curso/update/{{curso.id}}">
+      <img class="button-icon" src="/img/edit.svg"/>
+      <span class="tooltiptext">Editar curso</span>
+    </a>
+  </div>
+  <div class="curso-option-button" style="margin: 15px 0;">
+    <a class="btn btn-primary" style="padding: 0 5px;" href="/curso/remove/{{curso.id}}">
+      <img class="button-icon" src="/img/delete.svg"/>
+      <span class="tooltiptext">Excluir curso</span>
+    </a>
+  </div>
+
+
+</div>
