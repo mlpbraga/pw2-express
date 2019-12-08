@@ -5,7 +5,7 @@ module.exports = {
     {
       nome: 'Maria Luísa Pereira Braga',
       email: 'mlpbraga@gmail.com',
-      senha: '123456',
+      senha: '$2a$10$MY6d4I9dAOhorJXvRuvHjuzCA5Bd1nzec9d2Cj3OFnM9FthYQT3iy',
       curso_id: 1,
       created_at: new Date(),
       updated_at: new Date(),
@@ -13,7 +13,7 @@ module.exports = {
     {
       nome: 'Ingra Cristina',
       email: 'icmoraes@gmail.com',
-      senha: '123456',
+      senha: '$2a$10$MY6d4I9dAOhorJXvRuvHjuzCA5Bd1nzec9d2Cj3OFnM9FthYQT3iy',
       curso_id: 3,
       created_at: new Date(),
       updated_at: new Date(),
@@ -21,7 +21,7 @@ module.exports = {
     {
       nome: 'Alezinho Ale Aloi',
       email: 'alealoi@gmail.com',
-      senha: '123456',
+      senha: '$2a$10$MY6d4I9dAOhorJXvRuvHjuzCA5Bd1nzec9d2Cj3OFnM9FthYQT3iy',
       curso_id: 1,
       created_at: new Date(),
       updated_at: new Date(),

@@ -5,17 +5,21 @@ const Curso = models.curso;
 const Area = models.area;
 
 const index = async (req, res) => {
-  const conteudo = 'Página principal da aplicação';
+  const csrf = req.csrfToken();
   const cursos = await Curso.findAll();
+  const { session } = req;
   if (req.route.methods.get) {
     res.render('curso/index', {
-      conteudo,
+      csrf,
       cursos,
+      sessionUid: session ? session.uid : undefined,
     });
   }
 };
 const read = async (req, res) => {
+  const csrf = req.csrfToken();
   const { id } = req.params;
+  const { session } = req;
   const curso = await Curso.findByPk(
     id,
     {
@@ -24,16 +28,19 @@ const read = async (req, res) => {
   );
   res.render('curso/read', {
     curso,
-    // csrf,
+    csrf,
+    sessionUid: session ? session.uid : undefined,
   });
 };
 const create = async (req, res) => {
-  // const csrf = req.csrfToken();
+  const csrf = req.csrfToken();
+  const { session } = req;
   const areas = await Area.findAll();
   if (req.route.methods.get) {
     res.render('curso/create', {
-      // csrf,
+      csrf,
       areas,
+      sessionUid: session ? session.uid : undefined,
     });
   } else {
     try {
@@ -41,23 +48,28 @@ const create = async (req, res) => {
       res.redirect('/curso');
     } catch (error) {
       res.render('curso/create', {
+        csrf,
         curso: req.body,
         errors: error.errors,
         areas,
+        sessionUid: session ? session.uid : undefined,
       });
     }
   }
 };
 const update = async (req, res) => {
+  const csrf = req.csrfToken();
   const { id } = req.params;
+  const { session } = req;
   const areas = await Area.findAll();
   const curso = await Curso.findByPk(id);
 
   if (req.route.methods.get) {
     res.render('curso/update', {
-      // csrf,
+      csrf,
       areas,
       curso,
+      sessionUid: session ? session.uid : undefined,
     });
   } else {
     try {
@@ -71,11 +83,14 @@ const update = async (req, res) => {
         curso: req.body,
         errors: error.errors,
         areas,
+        csrf,
+        sessionUid: session ? session.uid : undefined,
       });
     }
   }
 };
 const remove = async (req, res) => {
+  const csrf = req.csrfToken();
   const { id } = req.params;
   if (req.route.methods.get) {
     try {
@@ -88,6 +103,7 @@ const remove = async (req, res) => {
         conteudo,
         cursos,
         errors: error.errors,
+        csrf,
       });
     }
   }

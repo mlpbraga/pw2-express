@@ -17,6 +17,8 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.11.2",
+    "bcrypt": "^3.0.7",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "bootstrap": "^4.3.1",
     "compression": "^1.7.4",
@@ -24,6 +26,7 @@
     "csurf": "^1.10.0",
     "express": "^4.17.1",
     "express-handlebars": "^3.1.0",
+    "express-session": "^1.17.0",
     "jquery": "^3.4.1",
     "lodash": "^4.17.15",
     "morgan": "^1.9.1",
@@ -33,6 +36,8 @@
     "response-time": "^2.3.2",
     "sass": "^1.23.3",
     "sequelize": "^5.21.2",
-    "sequelize-cli": "^5.5.1"
+    "sequelize-cli": "^5.5.1",
+    "socket.io": "^2.3.0",
+    "uuid": "^3.3.3"
   }
 }

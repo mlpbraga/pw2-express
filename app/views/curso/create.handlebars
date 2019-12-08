@@ -8,13 +8,16 @@
             <input style="width:100px;" name="sigla" id="sigla" type="text" placeholder="Ex: IE00" class="form-control {{#if errors}}is-invalid{{/if}}" value="{{curso.sigla}}">
             <div class="invalid-feedback">{{showError errors 'sigla'}}</div>
           </div>
+        </div>
    
+        <div class="form-group" style="display:inline-flex;">
           <div class="form-field-curso">
             <label for="nome">Nome do Curso</label>
             <input style="width:300px;" name="nome" id="nome" type="text" placeholder="Ex: Ciência da Computação" class="form-control {{#if errors}}is-invalid{{/if}}" value="{{curso.nome}}">
             <div class="invalid-feedback">{{showError errors 'nome'}}</div>
           </div>
         </div>
+
         <div class="form-field-curso">
           <div>
             <label for="area_id">Área do Conhecimento</label>
@@ -32,10 +35,10 @@
           <textarea class="form-control" name="descricao" id="descricao" rows="3"></textarea>
         </div>
       </div>
+      <input type="hidden" name="_csrf" value="{{csrf}}">
       <div>
         <input type="submit" class="btn btn-primary" value="Enviar">
       </div>
-      {{!-- <input type="hidden" name="_csrf" value="{{csrf}}"> --}}
   </form>
   <div style="margin-top:20px;">
     <h1>Áreas de Conhecimento</h1>

@@ -32,10 +32,10 @@
           <textarea class="form-control" name="descricao" id="descricao" rows="3">{{curso.descricao}}</textarea>
         </div>
       </div>
+      <input type="hidden" name="_csrf" value="{{csrf}}">
       <div>
         <input type="submit" class="btn btn-primary" value="Enviar">
       </div>
-      {{!-- <input type="hidden" name="_csrf" value="{{csrf}}"> --}}
   </form>
   <div style="margin-top:20px;">
     <h1>Áreas de Conhecimento</h1>

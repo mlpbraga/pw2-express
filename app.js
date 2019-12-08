@@ -1,10 +1,12 @@
+/* eslint-disable no-console */
 const express = require('express');
 const handlebars = require('express-handlebars');
 const logger = require('morgan');
 const sass = require('node-sass-middleware');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const csrf = require('csurf');
+const session = require('express-session');
+const uuid = require('uuid');
 
 const router = require('./config/routes');
 // const { about } = require('./utils/constants');
@@ -17,6 +19,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(logger('short'));
 
 // middlewares
+
+app.use(cookieParser());
+
 app.use(sass({
   src: path.join(__dirname, 'public', 'scss'),
   dest: path.join(__dirname, 'public', 'css'),
@@ -41,52 +46,21 @@ app.use('/js', [
 ]);
 
 app.engine('handlebars', handlebars({
+  // eslint-disable-next-line global-require
   helpers: require('./config/handlebars-helpers'),
 }));
 
 app.set('view engine', 'handlebars');
 app.set('views', `${__dirname}/app/views`);
 
+app.use(session({
+  genid: () => uuid(),
+  secret: 'Hi9Cf#mK98',
+  resave: true,
+  saveUninitialized: true,
+}));
+
 app.use(router);
-
-app.use(cookieParser());
-app.use(csrf({ cookie: true }));
-
-app.get('/cookie', function (req, res) {
-  if (!('nome' in req.cookies)) {
-  res.cookie('nome', 'valor');
-  res.send('Você NUNCA passou por aqui!');
-  } else {
-  res.send('Você JÁ passou por aqui');
-  }
- });
-// app.use(function (req, res, next) {
-//   if (user.checkAuth(req)) {
-//     next();
-//   } else {
-//     res.statusCode = 403;
-//     res.end("Not authorized.");
-//   }
-// });
-
-// app.use(function(req, res) {
-//   res.end('Dados secretos: {código,156234}');
-//  });
-
-
-// rotas
-// app.get('/', (_req, res) => {
-//   res.render('index', about);
-// });
-// app.get('/sobre', (_req, res) => {
-//   res.end('Bem-vindo à página sobre!');
-// });
-
-// middleware not found
-// app.use(function (_req, res) {
-//   res.statusCode = 404;
-//   res.end('404!');
-// });
 
 app.listen(port, () => {
   console.log(`Express app iniciada na porta ${port}.`);

@@ -1,0 +1,17 @@
+<div class="login-form">
+  <h1>Login</h1>
+  <form action="/login" method="post" style="display:inline-block;margin-top:20px;">
+    <div class="form-group"  style="width:300px;">
+      <label for="email">Email</label>
+      <input name="email" id="email" type="email" placeholder="fulano@detal.com" class="form-control {{#if errors}}is-invalid{{/if}}" value="{{user.email}}">
+      <div class="invalid-feedback">{{showError errors 'email'}}</div>
+    </div>
+     <div class="form-group"  style="width:300px;">
+      <label for="senha">Senha</label>
+      <input name="senha" id="senha" type="password" placeholder="*******" class="form-control {{#if errors}}is-invalid{{/if}}" value="{{user.senha}}">
+      <div class="invalid-feedback">{{showError errors 'senha'}}</div>
+    </div>
+    <input type="hidden" name="_csrf" value="{{csrf}}">
+    <input type="submit" class="btn btn-primary" value="Entrar" style="display: inline-flex;">
+  </form>
+</div>
