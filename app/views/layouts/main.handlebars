@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/css/main.css">
     <title>My Chess App</title>
+
+    <link rel="stylesheet" href="/css/chessboard-1.0.0.min.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/style.css">  
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/popper.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/chess.min.js"></script>    
+    <script src="/js/chessboard-1.0.0.js"></script>  
+    <script src="/socket.io/socket.io.js"></script>
+
+
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
       <a class="navbar-brand" href="#">Navbar</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
@@ -18,7 +31,7 @@
           </li>
           {{#if sessionUid}}
             <li class="nav-item">
-              <a class="nav-link" href="/login">Jogar</a>
+              <a class="nav-link" href="/partida">Jogar</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/login">Ranking</a>
@@ -50,10 +63,6 @@
     <div class='container'>
 
     {{{body}}}
-    <script src="/js/jquery.min.js"></script>
-    <script src="/js/popper.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-
 
     <footer id="footer" style="margin-top: 50px;padding: 10px;border-top: solid 1px #EB6864;">
       <div class="row">

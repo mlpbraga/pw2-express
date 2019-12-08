@@ -4,6 +4,7 @@ const mainController = require('../app/controllers/main');
 const areaController = require('../app/controllers/area');
 const cursoController = require('../app/controllers/curso');
 const userController = require('../app/controllers/user');
+const jogoController = require('../app/controllers/jogo');
 
 const router = express.Router();
 const csrfProtection = csrf({ cookie: true });
@@ -62,6 +63,12 @@ router.use(checkSession);
 
 
 // CursoController
+
+router.get(
+  '/partida',
+  jogoController.index,
+);
+
 router.get(
   '/curso',
   csrfProtection,

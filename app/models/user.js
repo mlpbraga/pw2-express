@@ -1,4 +1,3 @@
-'use strict';
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('user', {
     nome: DataTypes.STRING,
@@ -16,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     } = models;
     User.belongsTo(curso);
     User.hasMany(mensagem);
-    User.hasMany(partida);
+    // User.hasMany(partida);
     // associations can be defined here
   };
   return User;

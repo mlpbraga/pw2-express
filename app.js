@@ -7,19 +7,38 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const uuid = require('uuid');
+const http = require('http');
+const io = require('socket.io');
 
 const router = require('./config/routes');
-// const { about } = require('./utils/constants');
 
 const app = express();
+http.createServer(app);
+io(http);
+
+// io.on('connect', (client) => {
+//   console.log('usuario conectado');
+//   const uid = client.id.substr(0, 4);
+//   let sala = 1;
+//   client.join(sala);
+
+//   client.on('oi', (oi) => {
+//     console.log(oi);
+//     client.emit('oi', `Você disse: ${oi}`);
+//     client.to(sala).broadcast.emit('oi', `O usuário ${uid} disse: ${oi}`);
+//   });
+
+//   client.on('mudarSala', (s) => {
+//     sala = s;
+//     client.leaveAll();
+//     client.join(sala);
+//   });
+// });
+
 const port = 4567;
 
 app.use(express.urlencoded({ extended: false }));
-
 app.use(logger('short'));
-
-// middlewares
-
 app.use(cookieParser());
 
 app.use(sass({
@@ -30,6 +49,11 @@ app.use(sass({
   prefix: '/css',
   force: true,
 }));
+
+app.use('/css', [
+  express.static(`${__dirname}/public/css/`),
+  express.static(`${__dirname}/node_modules/@chrisoakman/chessboardjs/dist/`),
+]);
 
 app.use('/public', express.static(path.join(__dirname, 'public', 'css')));
 
@@ -42,6 +66,8 @@ app.use('/js', [
   express.static(`${__dirname}/node_modules/jquery/dist/`),
   express.static(`${__dirname}/node_modules/popper.js/dist/umd/`),
   express.static(`${__dirname}/node_modules/bootstrap/dist/js/`),
+  express.static(`${__dirname}/node_modules/@chrisoakman/chessboardjs/dist/`),
+  express.static(`${__dirname}/node_modules/chess.js/`),
   express.static(`${__dirname}/public/js`),
 ]);
 

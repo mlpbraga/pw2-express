@@ -1,4 +1,3 @@
-'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Partida = sequelize.define('partida', {
     user_id_1: DataTypes.INTEGER,
@@ -15,11 +14,24 @@ module.exports = (sequelize, DataTypes) => {
     } = models;
     Partida.belongsToMany(
       user,
-      { through: 'partida_id_player_1_fk' },
+      {
+        foreignKey: 'user_id_1',
+        through: 'partida_ibfk_1',
+      },
     );
     Partida.belongsToMany(
       user,
-      { through: 'partida_id_player_2_fk' },
+      {
+        foreignKey: 'user_id_2',
+        through: 'partida_ibfk_2',
+      },
+    );
+    Partida.belongsToMany(
+      user,
+      {
+        foreignKey: 'winner',
+        through: 'partida_ibfk_3',
+      },
     );
     Partida.hasMany(mensagem);
     // associations can be defined here
