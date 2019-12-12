@@ -49,7 +49,6 @@ router.get(
   '/logout',
   mainController.logout,
 );
-
 router.use(checkSession);
 // router.get('/ui', mainController.ui);
 
@@ -66,6 +65,7 @@ router.use(checkSession);
 
 router.get(
   '/partida',
+  csrfProtection,
   jogoController.index,
 );
 

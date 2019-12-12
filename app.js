@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
 const express = require('express');
 const handlebars = require('express-handlebars');
@@ -7,35 +8,22 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const uuid = require('uuid');
-const http = require('http');
-const io = require('socket.io');
+
+const app = express();
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
+
+// io.on('connection', socket => {
+//   console.log('FILHO DE UMA PUTAAAAAA');
+// });
+
+const socket = require('./app/controllers/socket')(io);
+
+const port = 4567;
 
 const router = require('./config/routes');
 
-const app = express();
-http.createServer(app);
-io(http);
-
-// io.on('connect', (client) => {
-//   console.log('usuario conectado');
-//   const uid = client.id.substr(0, 4);
-//   let sala = 1;
-//   client.join(sala);
-
-//   client.on('oi', (oi) => {
-//     console.log(oi);
-//     client.emit('oi', `Você disse: ${oi}`);
-//     client.to(sala).broadcast.emit('oi', `O usuário ${uid} disse: ${oi}`);
-//   });
-
-//   client.on('mudarSala', (s) => {
-//     sala = s;
-//     client.leaveAll();
-//     client.join(sala);
-//   });
-// });
-
-const port = 4567;
+console.log('Aplicando middlewares...');
 
 app.use(express.urlencoded({ extended: false }));
 app.use(logger('short'));
@@ -49,19 +37,17 @@ app.use(sass({
   prefix: '/css',
   force: true,
 }));
-
 app.use('/css', [
   express.static(`${__dirname}/public/css/`),
   express.static(`${__dirname}/node_modules/@chrisoakman/chessboardjs/dist/`),
 ]);
-
-app.use('/public', express.static(path.join(__dirname, 'public', 'css')));
-
-// eslint-disable-next-line max-len
+app.use(
+  '/public',
+  express.static(path.join(__dirname, 'public', 'css')),
+);
 app.use('/img', [
   express.static(`${__dirname}/public/img`),
 ]);
-
 app.use('/js', [
   express.static(`${__dirname}/node_modules/jquery/dist/`),
   express.static(`${__dirname}/node_modules/popper.js/dist/umd/`),
@@ -71,14 +57,6 @@ app.use('/js', [
   express.static(`${__dirname}/public/js`),
 ]);
 
-app.engine('handlebars', handlebars({
-  // eslint-disable-next-line global-require
-  helpers: require('./config/handlebars-helpers'),
-}));
-
-app.set('view engine', 'handlebars');
-app.set('views', `${__dirname}/app/views`);
-
 app.use(session({
   genid: () => uuid(),
   secret: 'Hi9Cf#mK98',
@@ -86,8 +64,30 @@ app.use(session({
   saveUninitialized: true,
 }));
 
+app.use((req, res, next) => {
+  req.io = app.io;
+  next();
+});
+
+app.engine(
+  'handlebars',
+  handlebars({
+    // eslint-disable-next-line global-require
+    helpers: require(
+      './config/handlebars-helpers',
+    ),
+  }),
+);
+
+app.set('view engine', 'handlebars');
+app.set('views', `${__dirname}/app/views`);
+
 app.use(router);
 
-app.listen(port, () => {
-  console.log(`Express app iniciada na porta ${port}.`);
+// app.listen(port, () => {
+//   console.log(`Express app iniciada na porta ${port}.`);
+// });
+
+http.listen(port, () => {
+  console.log(`Ouvindo a porta ${port}...`);
 });

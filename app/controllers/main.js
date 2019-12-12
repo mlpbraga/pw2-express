@@ -5,8 +5,6 @@ const User = models.user;
 
 const index = (req, res) => {
   const { session } = req;
-  console.log('_____________________________________________');
-  console.log(session);
   const conteudo = 'Página principal da aplicação';
   res.render('main/index', {
     conteudo,

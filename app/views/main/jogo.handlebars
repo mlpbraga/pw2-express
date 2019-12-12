@@ -1,16 +1,76 @@
-<div class="row ml-1 mt-4">
-  <div class="col">
-    <div id="board" style="width: 500px"></div>
+<div class="board-container">
+  <div class="col" style="height: 500px;">
     <div id="status">A vez é do jogador <b>branco</b>.</div>
+    <div id="board" style="width: 500px;margin: 20px auto 0;padding: 0 20px;text-align: center;max-width: 900px;"></div>
   </div>
+  <div class="col" style="height: 500px;">
+      <b>Mensagens</b>
+      <form id="chat-form" class="chat-form">
+        <input type="hidden" name="_csrf" value="{{csrf}}">
+        <div id="messages-container" class="messages-container"></div>
+        <div class="message-chat-input">
+          <input class="chat-input" type="text" name="new-message" placeholder="Digite uma mensagem"/>
+          <button class="btn btn-primary" type="submit">Enviar</button>
+        </div>
+      </form>
+    </div>
 </div>
 
-<script>
+{{!-- FUNCIONALIDADE DE CHAT --}}
+<script type="text/javascript">
+  const socket = io('http://localhost:4567');
+  
+  renderMessage = (message) => {
+    $('.messages-container').append(
+      `
+      <div class="message">
+        <strong> ${message.author} </strong>: ${message.mensagem}
+      </div>
+      `
+    );
+    var objDiv = document.getElementById("messages-container");
+    objDiv.scrollTop = objDiv.scrollHeight;
+  };
 
+  window.onload = () => {
+    socket.emit('renderChat', {{partida_id}})
+
+    socket.on('previousMessages', (messages) => {
+      for (m of messages) {
+        renderMessage({
+          author: m.user.nome,
+          mensagem: m.mensagem
+        });
+      }
+    })
+  }
+
+  socket.on('receivedMessage', (message) => {
+    renderMessage(message);
+  });
+  
+  $('#chat-form').submit((event)=>{
+    event.preventDefault();
+    let newMessage = $('.chat-input').val();
+    if (newMessage.length) {
+      const messageObj = {
+        user_id: {{sessionUid}},
+        author: '{{author}}',
+        mensagem: newMessage,
+        partida_id: {{partida_id}}
+      };
+      console.log('messageObj', messageObj);
+      socket.emit('sendMessage', messageObj);
+      renderMessage(messageObj);
+    }
+  })
+</script>
+
+<script>
   const game = new Chess();
   const color = '{{color}}';
   const fen = 'start';
-  const partida = {{partida.id}};
+  const partida = {{partida_id}};
 
   game.load(fen); // fen é a posição das peças no tabuleiro
 
