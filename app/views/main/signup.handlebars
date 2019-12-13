@@ -3,17 +3,21 @@
   <form action="/signup" method="post" style="display:inline-block;margin-top:20px;">
       <div class="form-group">
         <label for="nome">Nome completo</label>
-        <input name="nome" id="nome" type="text" placeholder="Ex: Fulano de Tal" class="form-control {{#if errors}}is-invalid{{/if}}" value="{{user.nome}}">
-        <div class="invalid-feedback">{{showError errors 'nome'}}</div>
+        <div>
+          <input name="nome" id="nome" type="text" placeholder="Ex: Fulano de Tal" class="form-control {{isInvalid errors 'nome'}}" value="{{user.nome}}" required>
+          <div class="invalid-feedback">{{showError errors 'nome'}}</div>
+        </div>
       </div>
       <div class="form-group">
         <label for="email">Endereço de e-mail</label>
-        <input name="email" id="email" type="email" placeholder="Ex: fulano@exemplo.com" class="form-control {{#if errors}}is-invalid{{/if}}" value="{{user.email}}">
-        <div class="invalid-feedback">{{showError errors 'email'}}</div>
+        <div>
+          <input name="email" id="email" type="email" placeholder="Ex: fulano@exemplo.com" class="form-control {{isInvalid errors 'email'}}" value="{{user.email}}" required>
+          <div class="invalid-feedback">{{showError errors 'email'}}</div>
+        </div>
       </div>
       <div class="form-group">
         <label for="curso_id">Seu curso na UFAM</label>
-        <select name="curso_id" class="form-control {{#if errors}}is-invalid{{/if}}" value="{{usuario.curso_id}}">
+        <select name="curso_id" class="form-control {{isInvalid errors 'curso'}}" value="{{usuario.curso_id}}" required>
           <option value="" disabled selected>Selecione seu curso</option>
           {{#each cursos}}
             <option value="{{id}}">{{nome}}</option>
@@ -24,18 +28,21 @@
       <div class="form-group">
           <label for="senha">Senha</label>
           <div class="form-group" style="display: inline-flex;">
-            <input style="width:150px;" name="senha" id="senha" type="password" placeholder="******" class="form-control {{#if errors}}is-invalid{{/if}}" value="{{user.senha}}">
-            <div class="invalid-feedback">{{showError errors 'senha'}}</div> 
+            <div>
+              <input style="width:150px;" name="senha" id="senha" type="password" placeholder="******" class="form-control {{isInvalid errors 'senha'}}" value="{{user.senha}}" required>
+              <div class="invalid-feedback" style="max-width:140px;">{{showError errors 'senha'}}</div> 
+            </div>
           </div>
           <label for="confirmaSenha">Confirme a senha</label>
           <div class="form-group" style="display: inline-flex;">
-            <input style="width:150px;" name="confirmaSenha" id="confirmaSenha" type="password" placeholder="******" class="form-control {{#if errors}}is-invalid{{/if}}" value="{{user.confirmaSenha}}">
-            <div class="invalid-feedback">{{showError errors 'confirmaSenha'}}</div> 
+            <div>
+              <input style="width:150px;" name="confirmaSenha" id="confirmaSenha" type="password" placeholder="******" class="form-control {{isInvalid errors 'confirmaSenha'}}" value="{{user.confirmaSenha}}" required>
+              <div class="invalid-feedback" style="max-width:140px;">{{showError errors 'confirmaSenha'}}</div> 
+            </div>
           </div>    
       </div>
       <div class="form-group">
-        <label for="check">Eu li e concordo com os termos de serviço <input name="check" id="check" type="checkbox" {{#if errors}}is-invalid{{/if}} value="{{user.check}}"> </label>
-        <div class="invalid-feedback">{{showError errors 'check'}}</div>
+        <label for="check">Eu li e concordo com os termos de serviço <input name="check" id="check" type="checkbox" value="{{user.check}}" required> </label>
       </div>
       <input type="hidden" name="_csrf" value="{{csrf}}">
       <input type="submit" class="btn btn-primary" value="Cadastrar" style="display: inline-flex;">

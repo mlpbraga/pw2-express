@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+const _ = require('lodash');
 const bcrypt = require('bcryptjs');
 const models = require('../models/index');
 
@@ -45,7 +46,32 @@ const create = async (req, res) => {
       curso_id,
     } = req.body;
     const { session } = req;
-    if (senha && senha === confirmaSenha) {
+    const found = await User.findOne({ where: { email } });
+    if (found && !_.isEmpty(found.dataValues)) {
+      const error = {};
+      error.path = 'email';
+      error.message = 'Este e-mail já está cadastrado';
+      errors.push(error);
+    }
+    if (senha && senha !== confirmaSenha) {
+      const error = {};
+      error.path = 'confirmaSenha';
+      error.message = 'As senhas inseridas não correspondem';
+      errors.push(error);
+    }
+    if (nome && (nome.length < 6 || nome.length > 100)) {
+      const error = {};
+      error.path = 'nome';
+      error.message = 'O nome deve conter entre 6 e 100 carcteres';
+      errors.push(error);
+    }
+    if (senha && senha.length < 6) {
+      const error = {};
+      error.path = 'senha';
+      error.message = 'A senha deve conter 6 caracteres ou mais';
+      errors.push(error);
+    }
+    if (_.isEmpty(errors)) {
       await User.create({
         nome,
         email,
@@ -53,15 +79,8 @@ const create = async (req, res) => {
         curso_id,
         sessionUid: session ? session.uid : undefined,
       });
-      res.redirect('/');
+      res.redirect('/login');
     } else {
-      const error = {};
-      error.path = 'confirmaSenha';
-      error.message = 'As senhas inseridas não são correspondentes';
-      errors.push(error);
-    }
-
-    if (errors.length > 0) {
       res.render('main/signup', {
         cursos,
         user: req.body,
