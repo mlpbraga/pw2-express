@@ -13,10 +13,6 @@ const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 
-// io.on('connection', socket => {
-//   console.log('FILHO DE UMA PUTAAAAAA');
-// });
-
 const socket = require('./app/controllers/socket')(io);
 
 const port = 4567;
@@ -83,10 +79,6 @@ app.set('view engine', 'handlebars');
 app.set('views', `${__dirname}/app/views`);
 
 app.use(router);
-
-// app.listen(port, () => {
-//   console.log(`Express app iniciada na porta ${port}.`);
-// });
 
 http.listen(port, () => {
   console.log(`Ouvindo a porta ${port}...`);

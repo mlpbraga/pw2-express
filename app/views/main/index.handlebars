@@ -1,1 +1,12 @@
-<div>{{conteudo}}</div>
+<div>
+  Seja bem vindo ao aplicativo de partidas de xadrez do Instituto de Computação. Para iniciar uma nova partida, clique na opção Nova Partida do menu superior.
+  Essa aplicação foi desenvolvida para servir de modelo para o Trabalho Prático da disciplina Programação Web 2.
+  <h1>Usuários aguardando oponentes</h1>
+  {{#each resp}}
+    <div class="waiting-tables">
+      <a href="/partida/{{partida_id}}">
+        <strong>{{creator}}</strong>
+      </a>
+    </div>
+  {{/each}}
+</div>

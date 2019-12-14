@@ -1,8 +1,20 @@
 module.exports = (sequelize, DataTypes) => {
   const Partida = sequelize.define('partida', {
-    user_id_1: DataTypes.INTEGER,
-    user_id_2: DataTypes.INTEGER,
-    winner: DataTypes.INTEGER,
+    user_id_1: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      default: null,
+    },
+    user_id_2: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      default: null,
+    },
+    winner: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      default: null,
+    },
     fen: DataTypes.STRING,
   }, {
     underscored: true,

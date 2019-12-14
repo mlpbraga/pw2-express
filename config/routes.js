@@ -18,10 +18,6 @@ const checkSession = async (req, res, next) => {
 };
 
 router.get(
-  '/',
-  mainController.index,
-);
-router.get(
   '/sobre',
   mainController.sobre,
 );
@@ -51,19 +47,20 @@ router.get(
 );
 
 router.use(checkSession);
-// router.get('/ui', mainController.ui);
 
-// UserController
-// router.get('/user', userController.index);
-// router.get('/curso/read/:id', cursoController.read);
-// router.get('/user/create', userController.create);
-// router.get('/curso/update/:id', cursoController.update);
-// router.post('/curso/update/:id', cursoController.update);
-// router.get('/curso/remove/:id', cursoController.remove);
-
+router.get(
+  '/',
+  mainController.index,
+);
 
 router.get(
   '/partida',
+  csrfProtection,
+  jogoController.create,
+);
+
+router.get(
+  '/partida/:id',
   csrfProtection,
   jogoController.index,
 );

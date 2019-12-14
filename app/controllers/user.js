@@ -75,7 +75,6 @@ const create = async (req, res) => {
         csrf,
         sessionUid: session ? session.uid : undefined,
       });
-      throw new Error('confirmaSenha');
     }
   }
 };

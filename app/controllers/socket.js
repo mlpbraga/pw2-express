@@ -38,5 +38,16 @@ module.exports = (io) => {
       });
       await socket.broadcast.emit('receivedMessage', data);
     });
+
+    socket.on('save_table', async (data) => {
+      const { fen, partida_id } = data;
+      try {
+        const partida = await Partida.update(
+          { fen },
+          { where: { id: partida_id } },
+        );
+        socket.broadcast.emit('update_tables', { fen, partida_id });
+      } catch (error) {console.log('error', error)}
+    });
   });
 };

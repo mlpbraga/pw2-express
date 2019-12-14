@@ -1,4 +1,6 @@
 const bcrypt = require('bcryptjs');
+const { Op } = require('sequelize');
+
 const models = require('../models/index');
 
 const { sequelize } = models;
@@ -6,14 +8,34 @@ const { sequelize } = models;
 const User = models.user;
 const Partida = models.partida;
 
-const index = (req, res) => {
+const index = async (req, res) => {
   const { session } = req;
-  const conteudo = 'Página principal da aplicação';
-  res.render('main/index', {
-    conteudo,
-    layout: 'main',
-    sessionUid: session ? session.uid : undefined,
-  });
+  if (session) {
+    const user = await User.findByPk(session.uid);
+    const users = await User.findAll({});
+    const possiveisPartidas = await Partida.findAll({});
+    const resp = [];
+    let creator;
+    possiveisPartidas.forEach((found) => {
+      // eslint-disable-next-line prefer-destructuring
+      creator = users.filter(
+        u => (u.id === found.user_id_1),
+      )[0].dataValues;
+
+      resp.push({
+        partida_id: found.id,
+        creator: creator.nome,
+        fen: found.fen,
+      });
+    });
+    res.render('main/index', {
+      resp,
+      layout: 'main',
+      sessionUid: session ? session.uid : undefined,
+    });
+  } else {
+    res.redirect('/sobre');
+  }
 };
 const sobre = (req, res) => {
   const { session } = req;

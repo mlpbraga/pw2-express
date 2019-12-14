@@ -16,147 +16,176 @@
   </div>
 </div>
 
-<script type="text/javascript">
-  const socket = io('http://localhost:4567');
+<script>
+( function () {
+    const socket = io('http://localhost:4567');
+    const partida = {{partida_id}};
+    const user_w = {{jogadorBranco}};
+    {{#if jogadorPreto}}
+    const user_b = {{jogadorPreto}};
+    {{/if}}
+    const user_current = {{jogadorLogado}};
+    const my_color = user_current==user_w ? 'white' : 'black';
+    const my_name = '{{author}}';
+    const op_color = my_color == 'white' ? 'black' : 'white';
+    const op_name = 'teste';
+    const $status = $('#status');
 
-  // CHAT
-  renderMessage = (message) => {
-    const date = new Date(message.time);
-    $('.messages-container').append(
-      `
-      <div class="message">
-        <strong> ${message.author} </strong>: ${message.mensagem}
-        <small>${date.getDate()}/${date.getMonth()}/${date.getYear()}  ${date.getHours()}:${date.getMinutes()}</smal>
-      </div>
-      `
-    );
-    var objDiv = document.getElementById("messages-container");
-    objDiv.scrollTop = objDiv.scrollHeight;
-  };
+    // encontrou um jogador b
+    socket.emit('b_ok', { partida:partida });
+    const game = new Chess();
+    game.load('start');
+    const conf = {
+      draggable: true,
+      orientation: my_color,
+      position: game.fen(),
+      moveSpeed: 'slow',
+      pieceTheme: '/img/chesspieces/wikipedia/{piece}.png',
+      onDragStart: onDragStart,
+      onDrop: onDrop,
+      onSnapEnd: onSnapEnd
+    };
+    const board = Chessboard('board', conf);
 
-  window.onload = () => {
-    socket.emit('renderChat', {{ partida_id }})
-    socket.on('previousMessages', (messages) => {
-      for (m of messages) {
-        renderMessage({
-          author: m.user.nome,
-          mensagem: m.mensagem,
-          time: m.createdAt,
-        });
+    function onDragStart (source, piece, position, orientation) {
+      // do not pick up pieces if the game is over
+      if (game.game_over()) return false;
+
+      // only pick up pieces for its own color
+      if ((my_color === 'white' && piece.search(/^b/) !== -1) ||
+          (my_color === 'black' && piece.search(/^w/) !== -1)) {
+        return false  
       }
-    });
-  }
 
-  socket.on('receivedMessage', (message) => {
-    renderMessage(message);
-  });
-
-  $('#chat-form').submit((event) => {
-    event.preventDefault();
-    let newMessage = $('.chat-input').val();
-    if (newMessage.length) {
-      const messageObj = {
-        user_id: {{ sessionUid }},
-        author: '{{author}}',
-        mensagem: newMessage,
-        partida_id: {{ partida_id }},
-        createdAt: new Date(),
-        time: new Date(),
-      };
-      socket.emit('sendMessage', messageObj);
-      renderMessage(messageObj);
-    }
-  });
-
-  const game = new Chess();
-  const color = {{ jogadorLogado }} == {{ jogadorBranco }} ? 'w': 'b';
-  const fen = 'start';
-  const partida = {{ partida_id }};
-
-  // deve receber os dados de atualização do tabuleiro
-  updateStatus = () => {
-    var status = ''
-
-    var moveColor = '<b>branco</b>'
-    if (game.turn() === 'b') {
-      moveColor = '<b>preto</b>'
-    }
-
-    // checkmate?
-    if (game.in_checkmate()) {
-      status = 'É xeque-mate! Vitória do jogador ' + moveColor + '!'
-    }
-
-    // empate? (draw)
-    else if (game.in_draw()) {
-      status = 'O jogo empatou!'
-    }
-
-    // o jogo continua
-    else {
-      status = 'A vez é do jogador ' + moveColor + '.'
-
-      // check?
-      if (game.in_check()) {
-        status += ', o jogador ' + moveColor + ' está em xeque.'
+      // only pick up pieces for the side to move
+      if ((game.turn() === 'w' && piece.search(/^b/) !== -1) ||
+          (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
+        return false
       }
     }
-    document.getElementById('status').innerHTML = status;
-  }
-  
-  onDragStart = (source, piece, position, orientation) => {
 
-    // nao permitir o movimento de peças em caso de game over
-    if (game.game_over()) return false;
+    function onDrop (source, target) {
+      // see if the move is legal
+      var move = game.move({
+        from: source,
+        to: target,
+        promotion: 'q' // NOTE: always promote to a queen for example simplicity
+      });
 
-    // permitir apenas o movimento de peças de sua própria cor
-    if ((color === 'w' && piece.search(/^b/) !== -1) ||
-      (color === 'b' && piece.search(/^w/) !== -1)) {
-      return false
+      // illegal move
+      if (move === null) return 'snapback'
+
+      // Enviar posição para adversário
+      {{!-- socket.emit('move', {
+        partida: {{partida_id}},
+        source: source,
+        target: target,
+        position: game.fen(),
+      }); --}}
+
+      updateStatus();
     }
 
-    // o jogador só pode mover peças caso seja sua vez de jogar
-    if ((game.turn() === 'w' && piece.search(/^b/) !== -1) ||
-      (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
-      return false
+    // update the board position after the piece snap
+    // for castling, en passant, pawn promotion
+    function onSnapEnd () {
+      board.position(game.fen())
     }
-  }
 
-  onDrop = (source, target) => {
+    function updateStatus () {
+      var status = ''
 
-    // verificar se o movimento feito é legal de acordo com as regras de xadrez
-    var move = game.move({
-      from: source,
-      to: target,
-      promotion: 'q' // NOTA: Para manter a simplicidade, peões só poderão ser promovidos para rainhas
-    });
+      var moveColor = '<b>branco</b>'
+      if (game.turn() === 'b') {
+        moveColor = '<b>preto</b>'
+      }
 
-    // movimento ilegal, vamos retroceder a peça para a posição original
-    if (move === null) return 'snapback';
+      // checkmate?
+      if (game.in_checkmate()) {
+        status = 'É xeque-mate! Vitória do jogador ' + moveColor + '!'
+      }
 
+      // empate? (draw)
+      else if (game.in_draw()) {
+        status = 'O jogo empatou!'
+      }
 
-    // **** Usar SOCKET.IO para enviar o movimento para o adversário **** //
+      // game still on
+      else {
+        status = 'A vez é do jogador ' + moveColor + '.'
 
+        // check?
+        if (game.in_check()) {
+          status += ', o jogador ' + moveColor + ' está em xeque.'
+        }
+      }
+
+      $status.html(status)
+    }
+
+    {{!-- socket.on('move', function(move){
+      if (move.partida == {{partida_id}}) {
+        board.move(move.source + '-' + move.target);
+        game.move({
+          from: move.source,
+          to: move.target,
+          promotion: 'q' // NOTE: always promote to a queen for example simplicity
+        }); 
+
+        updateStatus();
+      }
+    });   --}}
 
     updateStatus();
-  }
+    renderMessage = (message) => {
+      const date = new Date(message.time);
+      $('.messages-container').append(
+        `
+        <div class="message">
+          <strong> ${message.author} </strong>: ${message.mensagem}
+          <small>${date.getDate()}/${date.getMonth()}/${date.getYear()}  ${date.getHours()}:${date.getMinutes()}</smal>
+        </div>
+        `
+      );
+      var objDiv = document.getElementById("messages-container");
+      objDiv.scrollTop = objDiv.scrollHeight;
+    };
 
-  onSnapEnd = () => {
-    board.position(game.fen())
-  }
+    window.onload = () => {
+      socket.emit('renderChat', {{ partida_id }})
+      socket.on('previousMessages', (messages) => {
+        for (m of messages) {
+          renderMessage({
+            author: m.user.nome,
+            mensagem: m.mensagem,
+            time: m.createdAt,
+          });
+        }
+      });
+    }
 
-  game.load(fen); // fen é a posição das peças no tabuleiro
+    socket.on('receivedMessage', (message) => {
+      renderMessage(message);
+    });
 
-  const board = Chessboard('board', {
-    draggable: true,
-    orientation: (color == 'w') ? 'white' : 'black',
-    position: fen,
-    moveSpeed: 'slow',
-    pieceTheme: '/img/chesspieces/wikipedia/{piece}.png',
-    onDragStart: onDragStart, // quando o usuário pega a peça, para começar seu movimento
-    onDrop: onDrop, // quando o usuário solta a peça, para encerrar seu movimento
-    onSnapEnd: onSnapEnd // quando um jogador come a peça do outro, ou quando o peao chega no topo do campo do outro
-  });
-
-  updateStatus();
+    $('#chat-form').submit((event) => {
+      event.preventDefault();
+      let newMessage = $('.chat-input').val();
+      if (newMessage.length) {
+        const messageObj = {
+          user_id: {{ sessionUid }},
+          author: '{{author}}',
+          mensagem: newMessage,
+          partida_id: {{ partida_id }},
+          createdAt: new Date(),
+          time: new Date(),
+        };
+        socket.emit('sendMessage', messageObj);
+        renderMessage(messageObj);
+      }
+    });
+  })();
+  
+    // CHAT
+    
 </script>
