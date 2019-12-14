@@ -1,3 +1,4 @@
+# O que foi feito
 **Regra 1**:
 
 - [x] A aplicação deverá ter uma rota `/sobre`, que deverá conter o conteúdo da seção **Sobre o Jogo de Xadrez** da especificação do trabalho. Essa página também deverá conter uma imagem das peças de xadrez, tal como mostrado em https://xadrezapp.herokuapp.com/sobre.
