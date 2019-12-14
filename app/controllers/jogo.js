@@ -11,8 +11,12 @@ const index = async (req, res) => {
     const user = await User.findByPk(session.uid);
     res.render('main/jogo', {
       partida_id: partida.id,
+      jogadorBranco: partida.user_id_1,
+      jogadorPreto: partida.user_id_2,
       sessionUid: session ? session.uid : undefined,
+      fen: partida.fen,
       author: user.nome,
+      jogadorLogado: user.id,
       csrf,
     });
   }

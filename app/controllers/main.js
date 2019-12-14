@@ -1,7 +1,10 @@
 const bcrypt = require('bcryptjs');
 const models = require('../models/index');
 
+const { sequelize } = models;
+
 const User = models.user;
+const Partida = models.partida;
 
 const index = (req, res) => {
   const { session } = req;
@@ -51,6 +54,37 @@ const login = async (req, res) => {
     }
   }
 };
+
+const ranking = async (req, res) => {
+  const { session } = req;
+  const partidas = await Partida.findAll({
+    attributes: ['winner', [sequelize.fn('count', 'partida.id'), 'winCount']],
+    group: ['winner'],
+    order: [[sequelize.fn('count', 'partida.id'), 'DESC']],
+  });
+  const users = await User.findAll({});
+  const final = [];
+
+  let count = 1;
+  partidas.forEach((winner) => {
+    users.forEach((user) => {
+      if (winner.winner === user.id) {
+        final.push({
+          count,
+          name: user.nome,
+          score: winner.dataValues.winCount,
+        });
+        count += 1;
+      }
+    });
+  });
+  res.render('main/ranking', {
+    layout: 'main',
+    scores: final,
+    sessionUid: session ? session.uid : undefined,
+  });
+};
+
 const logout = (req, res) => {
   req.session.destroy((err) => {
     if (err) {
@@ -64,4 +98,5 @@ module.exports = {
   sobre,
   login,
   logout,
+  ranking,
 };

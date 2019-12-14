@@ -5,7 +5,7 @@
         <div class="form-group" style="display:inline-flex;">
           <div class="form-field-curso">
             <label for="sigla">Sigla</label>
-            <input style="width:100px;" name="sigla" id="sigla" type="text" placeholder="Ex: IE00" class="form-control {{#if errors}}is-invalid{{/if}}" value="{{curso.sigla}}">
+            <input style="width:100px;" name="sigla" id="sigla" type="text" placeholder="Ex: IE00" class="form-control {{isInvalid errors 'sigla'}}" value="{{curso.sigla}}" required>
             <div class="invalid-feedback">{{showError errors 'sigla'}}</div>
           </div>
         </div>
@@ -13,7 +13,7 @@
         <div class="form-group" style="display:inline-flex;">
           <div class="form-field-curso">
             <label for="nome">Nome do Curso</label>
-            <input style="width:300px;" name="nome" id="nome" type="text" placeholder="Ex: Ciência da Computação" class="form-control {{#if errors}}is-invalid{{/if}}" value="{{curso.nome}}">
+            <input style="width:300px;" name="nome" id="nome" type="text" placeholder="Ex: Ciência da Computação" class="form-control {{isInvalid errors 'nome'}}" value="{{curso.nome}}" required>
             <div class="invalid-feedback">{{showError errors 'nome'}}</div>
           </div>
         </div>
@@ -24,7 +24,7 @@
           </div>
           <div style="display: inline-flex;">
             {{#each areas}}
-              <input style="margin: 0px 5px 0px 15px;" class="align-middle" type="radio" name="area_id" id="area_id" value="{{id}}"> {{nome}}<br>
+              <input style="margin: 0px 5px 0px 15px;" class="align-middle" type="radio" name="area_id" id="area_id" value="{{id}}" required> {{nome}}<br>
             {{/each}}
           </div>
           <div class="invalid-feedback">{{showError errors 'area_id'}}</div>

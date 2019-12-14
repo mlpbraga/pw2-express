@@ -3,6 +3,7 @@ const models = require('../models/index');
 
 const Mensagem = models.mensagem;
 const User = models.user;
+const Partida = models.partida;
 
 // const Partida = models.partida;
 // const User = models.user;
@@ -22,13 +23,17 @@ module.exports = (io) => {
     });
 
     socket.on('sendMessage', async (data) => {
-      const { user_id, partida_id, mensagem } = data;
-      console.log(data);
+      const {
+        user_id,
+        partida_id,
+        mensagem,
+        createdAt,
+      } = data;
       await Mensagem.create({
         partida_id,
         user_id,
         mensagem,
-        created_at: new Date(),
+        created_at: createdAt,
         updated_at: new Date(),
       });
       await socket.broadcast.emit('receivedMessage', data);

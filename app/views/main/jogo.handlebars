@@ -4,27 +4,29 @@
     <div id="board" style="width: 500px;margin: 20px auto 0;padding: 0 20px;text-align: center;max-width: 900px;"></div>
   </div>
   <div class="col" style="height: 500px;">
-      <b>Mensagens</b>
-      <form id="chat-form" class="chat-form">
-        <input type="hidden" name="_csrf" value="{{csrf}}">
-        <div id="messages-container" class="messages-container"></div>
-        <div class="message-chat-input">
-          <input class="chat-input" type="text" name="new-message" placeholder="Digite uma mensagem"/>
-          <button class="btn btn-primary" type="submit">Enviar</button>
-        </div>
-      </form>
-    </div>
+    <b>Mensagens</b>
+    <form id="chat-form" class="chat-form">
+      <input type="hidden" name="_csrf" value="{{csrf}}">
+      <div id="messages-container" class="messages-container"></div>
+      <div class="message-chat-input">
+        <input class="chat-input" type="text" name="new-message" placeholder="Digite uma mensagem" />
+        <button class="btn btn-primary" type="submit">Enviar</button>
+      </div>
+    </form>
+  </div>
 </div>
 
-{{!-- FUNCIONALIDADE DE CHAT --}}
 <script type="text/javascript">
   const socket = io('http://localhost:4567');
-  
+
+  // CHAT
   renderMessage = (message) => {
+    const date = new Date(message.time);
     $('.messages-container').append(
       `
       <div class="message">
         <strong> ${message.author} </strong>: ${message.mensagem}
+        <small>${date.getDate()}/${date.getMonth()}/${date.getYear()}  ${date.getHours()}:${date.getMinutes()}</smal>
       </div>
       `
     );
@@ -33,98 +35,46 @@
   };
 
   window.onload = () => {
-    socket.emit('renderChat', {{partida_id}})
-
+    socket.emit('renderChat', {{ partida_id }})
     socket.on('previousMessages', (messages) => {
       for (m of messages) {
         renderMessage({
           author: m.user.nome,
-          mensagem: m.mensagem
+          mensagem: m.mensagem,
+          time: m.createdAt,
         });
       }
-    })
+    });
   }
 
   socket.on('receivedMessage', (message) => {
     renderMessage(message);
   });
-  
-  $('#chat-form').submit((event)=>{
+
+  $('#chat-form').submit((event) => {
     event.preventDefault();
     let newMessage = $('.chat-input').val();
     if (newMessage.length) {
       const messageObj = {
-        user_id: {{sessionUid}},
+        user_id: {{ sessionUid }},
         author: '{{author}}',
         mensagem: newMessage,
-        partida_id: {{partida_id}}
+        partida_id: {{ partida_id }},
+        createdAt: new Date(),
+        time: new Date(),
       };
-      console.log('messageObj', messageObj);
       socket.emit('sendMessage', messageObj);
       renderMessage(messageObj);
     }
-  })
-</script>
-
-<script>
-  const game = new Chess();
-  const color = '{{color}}';
-  const fen = 'start';
-  const partida = {{partida_id}};
-
-  game.load(fen); // fen é a posição das peças no tabuleiro
-
-  const board = Chessboard('board', {
-    draggable: true,
-    orientation: (color == 'w') ? 'white' : 'black',
-    position: fen,
-    moveSpeed: 'slow',
-    pieceTheme: '/img/chesspieces/wikipedia/{piece}.png',
-    onDragStart: onDragStart, // quando o usuário pega a peça, para começar seu movimento
-    onDrop: onDrop, // quando o usuário solta a peça, para encerrar seu movimento
-    onSnapEnd: onSnapEnd // quando um jogador come a peça do outro, ou quando o peao chega no topo do campo do outro
   });
 
-  function onDragStart(source, piece, position, orientation) {
+  const game = new Chess();
+  const color = {{ jogadorLogado }} == {{ jogadorBranco }} ? 'w': 'b';
+  const fen = 'start';
+  const partida = {{ partida_id }};
 
-    // nao permitir o movimento de peças em caso de game over
-    if (game.game_over()) return false;
-
-    // permitir apenas o movimento de peças de sua própria cor
-    if ((color === 'w' && piece.search(/^b/) !== -1) ||
-      (color === 'b' && piece.search(/^w/) !== -1)) {
-      return false
-    }
-
-    // o jogador só pode mover peças caso seja sua vez de jogar
-    if ((game.turn() === 'w' && piece.search(/^b/) !== -1) ||
-      (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
-      return false
-    }
-  }
-
-  function onDrop(source, target) {
-
-    // verificar se o movimento feito é legal de acordo com as regras de xadrez
-    var move = game.move({
-      from: source,
-      to: target,
-      promotion: 'q' // NOTA: Para manter a simplicidade, peões só poderão ser promovidos para rainhas
-    });
-
-    // movimento ilegal, vamos retroceder a peça para a posição original
-    if (move === null) return 'snapback'
-
-    // **** Usar SOCKET.IO para enviar o movimento para o adversário **** // 
-
-    updateStatus();
-  }
-
-  function onSnapEnd() {
-    board.position(game.fen())
-  }
-
-  function updateStatus() {
+  // deve receber os dados de atualização do tabuleiro
+  updateStatus = () => {
     var status = ''
 
     var moveColor = '<b>branco</b>'
@@ -151,8 +101,62 @@
         status += ', o jogador ' + moveColor + ' está em xeque.'
       }
     }
-
     document.getElementById('status').innerHTML = status;
   }
+  
+  onDragStart = (source, piece, position, orientation) => {
 
+    // nao permitir o movimento de peças em caso de game over
+    if (game.game_over()) return false;
+
+    // permitir apenas o movimento de peças de sua própria cor
+    if ((color === 'w' && piece.search(/^b/) !== -1) ||
+      (color === 'b' && piece.search(/^w/) !== -1)) {
+      return false
+    }
+
+    // o jogador só pode mover peças caso seja sua vez de jogar
+    if ((game.turn() === 'w' && piece.search(/^b/) !== -1) ||
+      (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
+      return false
+    }
+  }
+
+  onDrop = (source, target) => {
+
+    // verificar se o movimento feito é legal de acordo com as regras de xadrez
+    var move = game.move({
+      from: source,
+      to: target,
+      promotion: 'q' // NOTA: Para manter a simplicidade, peões só poderão ser promovidos para rainhas
+    });
+
+    // movimento ilegal, vamos retroceder a peça para a posição original
+    if (move === null) return 'snapback';
+
+
+    // **** Usar SOCKET.IO para enviar o movimento para o adversário **** //
+
+
+    updateStatus();
+  }
+
+  onSnapEnd = () => {
+    board.position(game.fen())
+  }
+
+  game.load(fen); // fen é a posição das peças no tabuleiro
+
+  const board = Chessboard('board', {
+    draggable: true,
+    orientation: (color == 'w') ? 'white' : 'black',
+    position: fen,
+    moveSpeed: 'slow',
+    pieceTheme: '/img/chesspieces/wikipedia/{piece}.png',
+    onDragStart: onDragStart, // quando o usuário pega a peça, para começar seu movimento
+    onDrop: onDrop, // quando o usuário solta a peça, para encerrar seu movimento
+    onSnapEnd: onSnapEnd // quando um jogador come a peça do outro, ou quando o peao chega no topo do campo do outro
+  });
+
+  updateStatus();
 </script>

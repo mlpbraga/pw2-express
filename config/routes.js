@@ -49,6 +49,7 @@ router.get(
   '/logout',
   mainController.logout,
 );
+
 router.use(checkSession);
 // router.get('/ui', mainController.ui);
 
@@ -61,12 +62,15 @@ router.use(checkSession);
 // router.get('/curso/remove/:id', cursoController.remove);
 
 
-// CursoController
-
 router.get(
   '/partida',
   csrfProtection,
   jogoController.index,
+);
+
+router.get(
+  '/ranking',
+  mainController.ranking,
 );
 
 router.get(

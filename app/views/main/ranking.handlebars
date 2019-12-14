@@ -1,0 +1,15 @@
+<div class="ranking-container">
+  <h1>Ranking</h1>
+  <div class="ranking-title">
+    <strong>Posição</strong>
+    <strong>Nome</strong>
+    <strong>Nº Vitórias</strong>
+  </div>
+  {{#each scores}}
+    <div class="ranking-item">
+      <strong>{{count}}º</strong>
+      <strong>{{name}}</strong>
+      <strong>{{score}}</strong>
+    </div>
+  {{/each}}
+</div>

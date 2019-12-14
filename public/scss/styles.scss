@@ -20,7 +20,7 @@ label {
   margin-right: 10px;
 }
 
-.create-curso-form, .create-user-form, .login-form, .board-container, .sobre-container {
+.create-curso-form, .create-user-form, .login-form, .board-container, .sobre-container, .ranking-container {
   width: 90%;
   justify-content: space-between;
   margin: 20px auto 0;
@@ -142,6 +142,9 @@ label {
 .message strong {
   font-size: 12px;
 }
+.message small {
+  font-size: 8px;
+}
 #chat-form {
   height: 100%;
   display: flex;
@@ -168,4 +171,22 @@ label {
 
 .sobre-container {
   width: 100%;
+}
+
+.ranking-container {
+  max-width: 80%;
+}
+.ranking-title, .ranking-item {
+  display: flex;
+  justify-content: space-between;
+}
+
+.ranking-item {
+  margin: 10px 0;
+  padding: 0 25px;
+  border-radius: 3px;
+  background: #ffe6e6;
+}
+.ranking-item strong{
+  font-weight: normal;
 }
